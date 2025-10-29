@@ -3,7 +3,7 @@ version: ${project.version}
 description: Arena connector for BedWars2023 forked from andrei1058
 main: com.tomkeuper.bedwars.proxy.BedWarsProxy
 author: Mr. Ceasar
-api-version: '1.13'
+api-version: '1.21'
 softdepend:
   - Parties
   - Partys

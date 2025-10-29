@@ -11,13 +11,14 @@ public class MaterialUtil {
         if (version <= 112) {
             materialName = (version <= 108) ? v1_8 : v1_12;
         } else {
+            // For 1.13+ use the modern material name
             materialName = v1_13;
         }
 
         try {
             return Material.valueOf(materialName);
         } catch (IllegalArgumentException e) {
-            BedWarsProxy.getPlugin().getLogger().warning("Invalid material name for version " + version + ": " + materialName);
+            BedWarsProxy.getPlugin().getLogger().warning("Invalid material name for version " + version + ": " + materialName + ". Material may not exist in this version.");
             return null;
         }
     }
