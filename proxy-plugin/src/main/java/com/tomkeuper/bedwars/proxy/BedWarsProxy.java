@@ -49,6 +49,16 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Field;
 import java.util.StringJoiner;
 
+/**
+ * Main plugin class for BedWarsProxy2023.
+ * <p>
+ * This plugin manages BedWars arena coordination, player statistics, party systems,
+ * and level management across multiple Spigot servers using Redis for communication.
+ * </p>
+ *
+ * @author TomkeupeR
+ * @version 1.0
+ */
 public class BedWarsProxy extends JavaPlugin {
 
     private static BedWarsProxy plugin;
@@ -68,6 +78,12 @@ public class BedWarsProxy extends JavaPlugin {
     public static boolean isPapi = false, debug = true;
     public static int defaultRankupCost;
 
+    /**
+     * Called when the plugin is loaded.
+     * <p>
+     * Initializes the plugin instance, API, and registers the BedWars service.
+     * </p>
+     */
     @Override
     public void onLoad() {
         plugin = this;
@@ -76,6 +92,23 @@ public class BedWarsProxy extends JavaPlugin {
         // Setup languages
     }
 
+    /**
+     * Called when the plugin is enabled.
+     * <p>
+     * Performs the following initialization tasks:
+     * <ul>
+     *   <li>Initializes language manager and configuration</li>
+     *   <li>Establishes database connection (MySQL or NoDatabase)</li>
+     *   <li>Connects to Redis server for cross-server communication</li>
+     *   <li>Retrieves default rankup cost from Redis settings</li>
+     *   <li>Registers event listeners and commands</li>
+     *   <li>Detects and hooks into party plugins (Parties, PAF, or internal system)</li>
+     *   <li>Initializes level management system</li>
+     *   <li>Loads PlaceholderAPI support if available</li>
+     *   <li>Sets up metrics and addon system</li>
+     * </ul>
+     * </p>
+     */
     @Override
     public void onEnable() {
         LanguageManager.init();
@@ -169,7 +202,7 @@ public class BedWarsProxy extends JavaPlugin {
         // Send startup message, delayed to make sure everything is loaded and registered.
         Bukkit.getScheduler().runTaskLater(this, () -> {
             this.getLogger().info("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-            this.getLogger().info("BWProxy2023 v"+ plugin.getDescription().getVersion()+" has been enabled!");
+            this.getLogger().info("AstroidBWProxy v"+ plugin.getDescription().getVersion()+" has been enabled!");
             this.getLogger().info("");
             this.getLogger().info("PAPI Support: " + isPapi);
             this.getLogger().info("");
@@ -190,6 +223,13 @@ public class BedWarsProxy extends JavaPlugin {
         }, 80L);
     }
 
+    /**
+     * Called when the plugin is disabled.
+     * <p>
+     * Performs cleanup operations including closing the Redis connection
+     * and canceling all scheduled tasks.
+     * </p>
+     */
     @Override
     public void onDisable() {
         redisConnection.close();

@@ -1,5 +1,6 @@
 package com.tomkeuper.bedwars.proxy.arenamanager;
 
+import com.iridium.iridiumcolorapi.IridiumColorAPI;
 import com.saicone.rtag.RtagItem;
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
 import com.tomkeuper.bedwars.proxy.api.ArenaStatus;
@@ -22,48 +23,146 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ArenaGUI {
 
-    //Object[0] = inventory, Object[1] = group
-    private static HashMap<Player, Object[]> refresh = new HashMap<>();
     private static final YamlConfiguration yml = BedWarsProxy.config.getYml();
 
-    //Object[0] = inventory, Object[1] = group
-    public static void refreshInv(Player p, Object[] data) {
 
+    /**
+     * Opens the main GUI with quick join and map view options.
+     * Creates a clean 4-row GUI with a bed (slot 11), recovery compass (slot 15), and close barrier (slot 31).
+     *
+     * @param p The player to show the GUI to
+     * @param group The arena group/mode
+     */
+    public static void openGui(Player p, String group) {
+        // Fixed size: 4 rows (36 slots)
+        int size = 36;
+        Inventory inv = Bukkit.createInventory(new SelectorHolder(), size, Language.getMsg(p, Messages.ARENA_GUI_INV_NAME));
+
+        // Add beacon item on middle row, left-center (slot 11)
+        ItemStack bedItem = new ItemStack(Material.BEACON, 1);
+        ItemMeta bedMeta = bedItem.getItemMeta();
+        if (bedMeta != null) {
+            bedMeta.setDisplayName(IridiumColorAPI.process(ChatColor.GREEN + "The Rift (" + group + ")"));
+            List<String> bedLore = new ArrayList<>();
+            bedLore.add(IridiumColorAPI.process(ChatColor.GRAY + "Click to jump into a random arena"));
+            bedLore.add(IridiumColorAPI.process(ChatColor.GRAY + "and start your battle!"));
+            bedMeta.setLore(bedLore);
+            bedItem.setItemMeta(bedMeta);
+        }
+        bedItem = RtagItem.edit(bedItem, tag -> {
+            tag.set("quick-join", "action");
+            tag.set(group, "group");
+            tag.set("true", "cancelClick");
+        });
+        inv.setItem(11, bedItem);
+
+        // Add empty map with information about The Rift/BedWars on middle row, center (slot 13)
+        ItemStack infoItem;
+        try {
+            infoItem = new ItemStack(Material.valueOf("MAP"), 1);
+        } catch (Exception e) {
+            infoItem = new ItemStack(Material.PAPER, 1);
+        }
+        ItemMeta infoMeta = infoItem.getItemMeta();
+        if (infoMeta != null) {
+            infoMeta.setDisplayName(IridiumColorAPI.process(ChatColor.YELLOW + "What is The Rift?"));
+            List<String> infoLore = new ArrayList<>();
+            infoLore.add(IridiumColorAPI.process("&7AstroidMC's take on BedWars — reimagined among the stars."));
+            infoLore.add(IridiumColorAPI.process("&7Defend your &bRift Core &7and shatter others across the void."));
+            infoLore.add(IridiumColorAPI.process("&7Gather &6Meteorite Shards &7and &bIons &7to upgrade your gear."));
+            infoLore.add(IridiumColorAPI.process("&7Use &dCosmic Crystals &7to unlock powerful gadgets and shields."));
+            infoMeta.setLore(infoLore);
+            infoItem.setItemMeta(infoMeta);
+        }
+        infoItem = RtagItem.edit(infoItem, tag -> {
+            tag.set("info", "action");
+            tag.set("true", "cancelClick");
+        });
+        inv.setItem(13, infoItem);
+
+        // Add recovery compass/paper on middle row, right-center (slot 15)
+        ItemStack mapListItem;
+        try {
+            // Try recovery compass first (1.19+)
+            mapListItem = new ItemStack(Material.valueOf("RECOVERY_COMPASS"), 1);
+        } catch (Exception e) {
+            // Fallback to paper for older versions
+            mapListItem = new ItemStack(Material.PAPER, 1);
+        }
+        ItemMeta mapMeta = mapListItem.getItemMeta();
+        if (mapMeta != null) {
+            mapMeta.setDisplayName(IridiumColorAPI.process(ChatColor.AQUA + "View All Maps"));
+            List<String> mapLore = new ArrayList<>();
+            mapLore.add(IridiumColorAPI.process(ChatColor.GRAY + "Click to see all available maps"));
+            mapLore.add(IridiumColorAPI.process(ChatColor.GRAY + "for this mode"));
+            mapMeta.setLore(mapLore);
+            mapListItem.setItemMeta(mapMeta);
+        }
+        mapListItem = RtagItem.edit(mapListItem, tag -> {
+            tag.set("view-maps", "action");
+            tag.set(group, "group");
+            tag.set("true", "cancelClick");
+        });
+        inv.setItem(15, mapListItem);
+
+        // Add barrier on bottom row, center (slot 31) to close GUI
+        ItemStack closeItem = new ItemStack(Material.BARRIER, 1);
+        ItemMeta closeMeta = closeItem.getItemMeta();
+        if (closeMeta != null) {
+            closeMeta.setDisplayName(IridiumColorAPI.process(ChatColor.RED + "Close"));
+            List<String> closeLore = new ArrayList<>();
+            closeLore.add(IridiumColorAPI.process(ChatColor.GRAY + "Click to close the GUI"));
+            closeMeta.setLore(closeLore);
+            closeItem.setItemMeta(closeMeta);
+        }
+        closeItem = RtagItem.edit(closeItem, tag -> {
+            tag.set("close-gui", "action");
+            tag.set("true", "cancelClick");
+        });
+        inv.setItem(31, closeItem);
+
+        p.openInventory(inv);
+        SoundsConfig.playSound("arena-selector-open", p);
+    }
+
+    /**
+     * Opens a GUI showing all available maps for the specified group.
+     * Displays each arena as a separate item with detailed information.
+     *
+     * @param p The player to show the GUI to
+     * @param group The arena group/mode to display maps for
+     */
+    public static void openMapsView(Player p, String group) {
+        // Get all arenas for this group
         List<CachedArena> arenas;
-        if (((String)data[1]).equalsIgnoreCase("default")) {
+        if (group.equalsIgnoreCase("default")) {
             arenas = new ArrayList<>(ArenaManager.getArenas());
         } else {
             arenas = new ArrayList<>();
             for (CachedArena a : ArenaManager.getArenas()){
-                if (a.getArenaGroup().equalsIgnoreCase(data[1].toString())) arenas.add(a);
+                if (a.getArenaGroup().equalsIgnoreCase(group)) arenas.add(a);
             }
         }
 
+        // Remove playing arenas if configured
         arenas.removeIf(a -> a.getStatus() == ArenaStatus.PLAYING && !BedWarsProxy.config.getBoolean(ConfigPath.GENERAL_CONFIGURATION_ARENA_SELECTOR_SETTINGS_SHOW_PLAYING));
 
+        // Sort arenas
         arenas = arenas.stream().sorted(ArenaManager.getComparator()).collect(Collectors.toList());
 
-        int arenaKey = 0;
-        for (String useSlot : BedWarsProxy.config.getString(ConfigPath.GENERAL_CONFIGURATION_ARENA_SELECTOR_SETTINGS_USE_SLOTS).split(",")) {
-            int slot;
-            try {
-                slot = Integer.parseInt(useSlot);
-            } catch (Exception e) {
-                continue;
-            }
-            ItemStack i;
-            ((Inventory)data[0]).setItem(slot, new ItemStack(Material.AIR));
-            if (arenaKey >= arenas.size()) {
-                continue;
-            }
+        // Calculate inventory size (minimum 27, rounds up to nearest 9)
+        int size = Math.min(54, Math.max(27, ((arenas.size() + 8) / 9) * 9));
 
-            CachedArena ca = arenas.get(arenaKey);
+        Inventory inv = Bukkit.createInventory(new MapViewHolder(), size, ChatColor.AQUA + "Available Maps - " + group);
+
+        int slot = 0;
+        for (CachedArena ca : arenas) {
+            if (slot >= size) break;
 
             String status;
             switch (ca.getStatus()) {
@@ -80,7 +179,7 @@ public class ArenaGUI {
                     continue;
             }
 
-            i = new ItemStack(Material.valueOf(yml.getString(ConfigPath.GENERAL_CONFIGURATION_ARENA_SELECTOR_STATUS_MATERIAL.replace("%path%", status))
+            ItemStack i = new ItemStack(Material.valueOf(yml.getString(ConfigPath.GENERAL_CONFIGURATION_ARENA_SELECTOR_STATUS_MATERIAL.replace("%path%", status))
             ), 1, (byte) yml.getInt(ConfigPath.GENERAL_CONFIGURATION_ARENA_SELECTOR_STATUS_DATA.replace("%path%", status)));
             if (i == null) i = new ItemStack(Material.BEDROCK);
 
@@ -92,7 +191,6 @@ public class ArenaGUI {
                     i.setItemMeta(im);
                 }
             }
-
 
             ItemMeta im = i.getItemMeta();
             com.tomkeuper.bedwars.proxy.api.Language lang = LanguageManager.get().getPlayerLanguage(p);
@@ -110,57 +208,29 @@ public class ArenaGUI {
                 i.setItemMeta(im);
             }
 
-            RtagItem.edit(i, tag -> {
+            i = RtagItem.edit(i, tag -> {
                 tag.set(ca.getServer(), "server");
                 tag.set(ca.getRemoteIdentifier(), "world_identifier");
                 tag.set("true", "cancelClick");
             });
 
-            ((Inventory)data[0]).setItem(slot, i);
-            arenaKey++;
-        }
-    }
-
-    public static void openGui(Player p, String group) {
-        int size = BedWarsProxy.config.getYml().getInt(ConfigPath.GENERAL_CONFIGURATION_ARENA_SELECTOR_SETTINGS_SIZE);
-        if (size % 9 != 0) size = 27;
-        if (size > 54) size = 54;
-        Inventory inv = Bukkit.createInventory(new SelectorHolder(), size, Language.getMsg(p, Messages.ARENA_GUI_INV_NAME));
-
-        ItemStack i;
-        try {
-            i = new ItemStack(Material.valueOf(yml.getString(ConfigPath.GENERAL_CONFIGURATION_ARENA_SELECTOR_STATUS_MATERIAL.replace("%path%", "skipped-slot"))),
-                    1, (byte) yml.getInt(ConfigPath.GENERAL_CONFIGURATION_ARENA_SELECTOR_STATUS_DATA.replace("%path%", "skipped-slot")));
-        } catch (Exception e) {
-            i = new ItemStack(Material.BEDROCK);
-        }
-        i = RtagItem.edit(i, tag -> {
-            tag.set("true", "cancelClick");
-        });
-
-        if (i.getItemMeta() != null){
-            ItemMeta im = i.getItemMeta();
-            im.setDisplayName(ChatColor.translateAlternateColorCodes('&', BedWarsProxy.config.getString(ConfigPath.GENERAL_CONFIG_PLACEHOLDERS_REPLACEMENTS_SERVER_IP)));
-            im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            i.setItemMeta(im);
-        }
-
-        for (int x = 0; x < inv.getSize(); x++) {
-            inv.setItem(x, i);
+            inv.setItem(slot, i);
+            slot++;
         }
 
         p.openInventory(inv);
-        refresh.put(p, new Object[]{inv, group});
-        refreshInv(p, new Object[]{inv, group});
-        //p.updateInventory();
         SoundsConfig.playSound("arena-selector-open", p);
     }
 
-    public static HashMap<Player, Object[]> getRefresh() {
-        return refresh;
-    }
 
     public static class SelectorHolder implements InventoryHolder {
+        @Override
+        public Inventory getInventory() {
+            return null;
+        }
+    }
+
+    public static class MapViewHolder implements InventoryHolder {
         @Override
         public Inventory getInventory() {
             return null;
