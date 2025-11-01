@@ -112,14 +112,14 @@
 
     <distributionManagement>
         <repository>
-            <id>bedwars-repo</id>
-            <name>BedWars Maven Repository</name>
-            <url>https://repo.tomkeuper.com/repository/releases/</url>
+            <id>astroidmc-releases</id>
+            <name>AstroidMC Maven Releases</name>
+            <url>https://maven.astroidmc.com/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
-            <id>bedwars-repo</id>
-            <name>BedWars Snapshot Maven Repository</name>
-            <url>https://repo.tomkeuper.com/repository/snapshots/</url>
+            <id>astroidmc-snapshots</id>
+            <name>AstroidMC Maven Snapshots</name>
+            <url>https://maven.astroidmc.com/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Maven Settings Template for AstroidMC Repository
+
+    Location:
+    - Windows: C:\Users\{username}\.m2\settings.xml
+    - Linux/Mac: ~/.m2/settings.xml
+
+    Instructions:
+    1. Copy this file to the location above
+    2. Replace YOUR_NEXUS_USERNAME with your username
+    3. Replace YOUR_NEXUS_PASSWORD with your password
+-->
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                              https://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+    <servers>
+        <!-- AstroidMC Maven Releases Repository -->
+        <server>
+            <id>astroidmc-releases</id>
+            <username>YOUR_NEXUS_USERNAME</username>
+            <password>YOUR_NEXUS_PASSWORD</password>
+        </server>
+
+        <!-- AstroidMC Maven Snapshots Repository -->
+        <server>
+            <id>astroidmc-snapshots</id>
+            <username>YOUR_NEXUS_USERNAME</username>
+            <password>YOUR_NEXUS_PASSWORD</password>
+        </server>
+    </servers>
+
+    <!-- Optional: Define profiles for different environments -->
+    <profiles>
+        <profile>
+            <id>astroidmc</id>
+            <repositories>
+                <repository>
+                    <id>astroidmc-releases</id>
+                    <url>https://maven.astroidmc.com/repository/maven-releases/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>astroidmc-snapshots</id>
+                    <url>https://maven.astroidmc.com/repository/maven-snapshots/</url>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+
+    <!-- Optional: Activate the profile by default -->
+    <activeProfiles>
+        <activeProfile>astroidmc</activeProfile>
+    </activeProfiles>
+
+</settings>
+
