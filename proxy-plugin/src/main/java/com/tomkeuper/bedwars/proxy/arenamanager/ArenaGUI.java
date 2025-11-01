@@ -2,12 +2,12 @@ package com.tomkeuper.bedwars.proxy.arenamanager;
 
 import com.iridium.iridiumcolorapi.IridiumColorAPI;
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
-import com.tomkeuper.bedwars.proxy.api.ArenaStatus;
-import com.tomkeuper.bedwars.proxy.api.CachedArena;
+import com.astroid.bedwars.proxy.api.ArenaStatus;
+import com.astroid.bedwars.proxy.api.CachedArena;
 import com.tomkeuper.bedwars.proxy.configuration.ConfigPath;
 import com.tomkeuper.bedwars.proxy.configuration.SoundsConfig;
 import com.tomkeuper.bedwars.proxy.language.Language;
-import com.tomkeuper.bedwars.proxy.api.Messages;
+import com.astroid.bedwars.proxy.api.Messages;
 import com.tomkeuper.bedwars.proxy.language.LanguageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -127,6 +127,26 @@ public class ArenaGUI {
         }
         inv.setItem(31, closeItem);
 
+        // Feedback button (slot 33) - book and quill at bottom right
+        ItemStack feedbackItem;
+        try {
+            feedbackItem = new ItemStack(Material.valueOf("WRITABLE_BOOK"), 1);
+        } catch (Exception e) {
+            // Fallback for older versions
+            feedbackItem = new ItemStack(Material.BOOK, 1);
+        }
+        ItemMeta feedbackMeta = feedbackItem.getItemMeta();
+        if (feedbackMeta != null) {
+            feedbackMeta.setDisplayName(IridiumColorAPI.process(ChatColor.LIGHT_PURPLE + "Leave Feedback"));
+            List<String> feedbackLore = new ArrayList<>();
+            feedbackLore.add(IridiumColorAPI.process("&7Help us improve by sharing"));
+            feedbackLore.add(IridiumColorAPI.process("&7your thoughts, bugs, or ideas!"));
+            feedbackMeta.setLore(feedbackLore);
+            feedbackMeta.getPersistentDataContainer().set(new NamespacedKey(BedWarsProxy.getPlugin(), "action"), PersistentDataType.STRING, "feedback");
+            feedbackItem.setItemMeta(feedbackMeta);
+        }
+        inv.setItem(35, feedbackItem);
+
         p.openInventory(inv);
         SoundsConfig.playSound("arena-selector-open", p);
     }
@@ -168,7 +188,7 @@ public class ArenaGUI {
         // Remove playing arenas if configured
         allArenas.removeIf(a -> a.getStatus() == ArenaStatus.PLAYING && !BedWarsProxy.config.getBoolean(ConfigPath.GENERAL_CONFIGURATION_ARENA_SELECTOR_SETTINGS_SHOW_PLAYING));
 
-        com.tomkeuper.bedwars.proxy.api.Language lang = LanguageManager.get().getPlayerLanguage(p);
+        com.astroid.bedwars.proxy.api.Language lang = LanguageManager.get().getPlayerLanguage(p);
 
         // Group arenas by map name (multiple docker containers can have same map)
         // Use LinkedHashMap to maintain insertion order
@@ -341,6 +361,7 @@ public class ArenaGUI {
             backItem.setItemMeta(backMeta);
         }
         inv.setItem(29, backItem);
+
 
         p.openInventory(inv);
         SoundsConfig.playSound("arena-selector-open", p);

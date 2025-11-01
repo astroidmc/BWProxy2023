@@ -1,7 +1,7 @@
 package com.tomkeuper.bedwars.proxy.arenamanager;
 
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
-import com.tomkeuper.bedwars.proxy.api.CachedArena;
+import com.astroid.bedwars.proxy.api.CachedArena;
 import com.google.gson.JsonObject;
 
 import java.util.LinkedList;

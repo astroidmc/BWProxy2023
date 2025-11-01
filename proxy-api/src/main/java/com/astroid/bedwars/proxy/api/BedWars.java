@@ -1,10 +1,10 @@
-package com.tomkeuper.bedwars.proxy.api;
+package com.astroid.bedwars.proxy.api;
 
-import com.tomkeuper.bedwars.proxy.api.addon.IAddonManager;
-import com.tomkeuper.bedwars.proxy.api.communication.IRedisClient;
-import com.tomkeuper.bedwars.proxy.api.database.Database;
-import com.tomkeuper.bedwars.proxy.api.level.Level;
-import com.tomkeuper.bedwars.proxy.api.party.Party;
+import com.astroid.bedwars.proxy.api.addon.IAddonManager;
+import com.astroid.bedwars.proxy.api.communication.IRedisClient;
+import com.astroid.bedwars.proxy.api.database.Database;
+import com.astroid.bedwars.proxy.api.level.Level;
+import com.astroid.bedwars.proxy.api.party.Party;
 import org.bukkit.entity.Player;
 
 import java.util.List;

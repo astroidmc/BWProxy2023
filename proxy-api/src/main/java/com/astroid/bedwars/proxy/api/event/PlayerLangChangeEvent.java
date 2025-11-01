@@ -1,6 +1,6 @@
-package com.tomkeuper.bedwars.proxy.api.event;
+package com.astroid.bedwars.proxy.api.event;
 
-import com.tomkeuper.bedwars.proxy.api.Language;
+import com.astroid.bedwars.proxy.api.Language;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

@@ -1,7 +1,7 @@
 package com.tomkeuper.bedwars.proxy.arenamanager;
 
-import com.tomkeuper.bedwars.proxy.api.*;
-import com.tomkeuper.bedwars.proxy.api.event.ArenaCacheRemoveEvent;
+import com.astroid.bedwars.proxy.api.*;
+import com.astroid.bedwars.proxy.api.event.ArenaCacheRemoveEvent;
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
 import com.tomkeuper.bedwars.proxy.configuration.ConfigPath;
 import com.tomkeuper.bedwars.proxy.language.LanguageManager;

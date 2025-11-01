@@ -1,8 +1,8 @@
 package com.tomkeuper.bedwars.proxy.addon;
 
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
-import com.tomkeuper.bedwars.proxy.api.addon.Addon;
-import com.tomkeuper.bedwars.proxy.api.addon.IAddonManager;
+import com.astroid.bedwars.proxy.api.addon.Addon;
+import com.astroid.bedwars.proxy.api.addon.IAddonManager;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;

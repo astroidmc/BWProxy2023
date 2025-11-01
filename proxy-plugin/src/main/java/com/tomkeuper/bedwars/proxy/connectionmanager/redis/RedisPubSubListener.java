@@ -2,8 +2,8 @@ package com.tomkeuper.bedwars.proxy.connectionmanager.redis;
 
 import com.google.gson.JsonElement;
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
-import com.tomkeuper.bedwars.proxy.api.CachedArena;
-import com.tomkeuper.bedwars.proxy.api.event.RedisMessageEvent;
+import com.astroid.bedwars.proxy.api.CachedArena;
+import com.astroid.bedwars.proxy.api.event.RedisMessageEvent;
 import com.tomkeuper.bedwars.proxy.arenamanager.ArenaManager;
 import com.tomkeuper.bedwars.proxy.arenamanager.TpRequest;
 import com.tomkeuper.bedwars.proxy.rejoin.RemoteReJoin;
@@ -43,14 +43,14 @@ public class RedisPubSubListener extends JedisPubSub {
                     if (!json.has("uuid")) break;
                     CachedArena arena = ArenaManager.getInstance().getArena(json.get("server").getAsString(), json.get("arena_id").getAsString());
                     if (arena == null) return;
-                    com.tomkeuper.bedwars.proxy.api.RemoteReJoin rrj2 = RemoteReJoin.getReJoin(UUID.fromString(json.get("uuid").getAsString()));
+                    com.astroid.bedwars.proxy.api.RemoteReJoin rrj2 = RemoteReJoin.getReJoin(UUID.fromString(json.get("uuid").getAsString()));
                     if (rrj2 != null) rrj2.destroy();
                     new RemoteReJoin(UUID.fromString(json.get("uuid").getAsString()), arena);
                     break;
                 case "RD":
                     if (!json.has("server")) break;
                     if (!json.has("uuid")) break;
-                    com.tomkeuper.bedwars.proxy.api.RemoteReJoin rrj = RemoteReJoin.getReJoin(UUID.fromString(json.get("uuid").getAsString()));
+                    com.astroid.bedwars.proxy.api.RemoteReJoin rrj = RemoteReJoin.getReJoin(UUID.fromString(json.get("uuid").getAsString()));
                     if (rrj == null) return;
                     if (rrj.getArena().getServer().equals(json.get("server").getAsString())) rrj.destroy();
                     break;

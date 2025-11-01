@@ -1,4 +1,4 @@
-package com.tomkeuper.bedwars.proxy.api.command;
+package com.astroid.bedwars.proxy.api.command;
 
 import org.bukkit.Location;
 import org.bukkit.command.Command;

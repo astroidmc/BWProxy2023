@@ -1,4 +1,4 @@
-package com.tomkeuper.bedwars.proxy.api.event;
+package com.astroid.bedwars.proxy.api.event;
 
 import com.google.gson.JsonObject;
 import org.bukkit.event.Event;

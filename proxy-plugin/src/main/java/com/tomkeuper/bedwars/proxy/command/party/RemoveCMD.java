@@ -1,7 +1,7 @@
 package com.tomkeuper.bedwars.proxy.command.party;
 
-import com.tomkeuper.bedwars.proxy.api.command.SubCommand;
-import com.tomkeuper.bedwars.proxy.api.Messages;
+import com.astroid.bedwars.proxy.api.command.SubCommand;
+import com.astroid.bedwars.proxy.api.Messages;
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

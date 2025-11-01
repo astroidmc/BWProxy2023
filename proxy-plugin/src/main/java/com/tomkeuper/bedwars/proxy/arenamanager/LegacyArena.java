@@ -1,9 +1,8 @@
 package com.tomkeuper.bedwars.proxy.arenamanager;
 
-import com.tomkeuper.bedwars.proxy.api.*;
-import com.tomkeuper.bedwars.proxy.api.event.ArenaCacheUpdateEvent;
-import com.tomkeuper.bedwars.proxy.api.event.PlayerArenaJoinEvent;
-import com.tomkeuper.bedwars.proxy.api.event.PlayerReJoinEvent;
+import com.astroid.bedwars.proxy.api.*;
+import com.astroid.bedwars.proxy.api.event.PlayerArenaJoinEvent;
+import com.astroid.bedwars.proxy.api.event.PlayerReJoinEvent;
 import com.tomkeuper.bedwars.proxy.language.LanguageManager;
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
 import com.google.common.io.ByteArrayDataOutput;

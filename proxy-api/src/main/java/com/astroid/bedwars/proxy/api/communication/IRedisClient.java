@@ -1,4 +1,4 @@
-package com.tomkeuper.bedwars.proxy.api.communication;
+package com.astroid.bedwars.proxy.api.communication;
 
 import org.jetbrains.annotations.NotNull;
 import com.google.gson.JsonObject;

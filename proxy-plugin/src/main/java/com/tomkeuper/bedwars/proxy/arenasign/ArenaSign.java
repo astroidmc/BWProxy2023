@@ -1,6 +1,6 @@
 package com.tomkeuper.bedwars.proxy.arenasign;
 
-import com.tomkeuper.bedwars.proxy.api.CachedArena;
+import com.astroid.bedwars.proxy.api.CachedArena;
 
 public interface ArenaSign {
 

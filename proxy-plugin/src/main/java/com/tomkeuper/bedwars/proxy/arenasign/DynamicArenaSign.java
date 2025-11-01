@@ -1,10 +1,10 @@
 package com.tomkeuper.bedwars.proxy.arenasign;
 
-import com.tomkeuper.bedwars.proxy.api.Language;
+import com.astroid.bedwars.proxy.api.Language;
 import com.tomkeuper.bedwars.proxy.arenamanager.ArenaManager;
-import com.tomkeuper.bedwars.proxy.api.ArenaStatus;
-import com.tomkeuper.bedwars.proxy.api.CachedArena;
-import com.tomkeuper.bedwars.proxy.api.Messages;
+import com.astroid.bedwars.proxy.api.ArenaStatus;
+import com.astroid.bedwars.proxy.api.CachedArena;
+import com.astroid.bedwars.proxy.api.Messages;
 import com.tomkeuper.bedwars.proxy.language.LanguageManager;
 import com.andrei1058.spigot.signapi.PacketSign;
 import org.bukkit.block.Block;

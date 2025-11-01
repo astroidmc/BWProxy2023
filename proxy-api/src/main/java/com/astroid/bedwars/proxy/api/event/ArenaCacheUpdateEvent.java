@@ -1,6 +1,6 @@
-package com.tomkeuper.bedwars.proxy.api.event;
+package com.astroid.bedwars.proxy.api.event;
 
-import com.tomkeuper.bedwars.proxy.api.CachedArena;
+import com.astroid.bedwars.proxy.api.CachedArena;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 

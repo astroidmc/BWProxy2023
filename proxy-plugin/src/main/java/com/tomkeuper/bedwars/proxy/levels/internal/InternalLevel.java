@@ -1,7 +1,7 @@
 package com.tomkeuper.bedwars.proxy.levels.internal;
 
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
-import com.tomkeuper.bedwars.proxy.api.level.Level;
+import com.astroid.bedwars.proxy.api.level.Level;
 import com.tomkeuper.bedwars.proxy.configuration.ConfigPath;
 import org.bukkit.entity.Player;
 

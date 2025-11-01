@@ -2,23 +2,18 @@ package com.tomkeuper.bedwars.proxy.connectionmanager.redis;
 
 import com.google.gson.JsonObject;
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
-import com.tomkeuper.bedwars.proxy.api.communication.IRedisClient;
+import com.astroid.bedwars.proxy.api.communication.IRedisClient;
 import com.tomkeuper.bedwars.proxy.configuration.ConfigPath;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.material.Bed;
 import org.jetbrains.annotations.NotNull;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Logger;
 
 public class RedisConnection implements IRedisClient {
 

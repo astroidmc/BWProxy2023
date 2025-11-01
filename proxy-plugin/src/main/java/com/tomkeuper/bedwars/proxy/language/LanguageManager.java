@@ -1,9 +1,9 @@
 package com.tomkeuper.bedwars.proxy.language;
 
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
-import com.tomkeuper.bedwars.proxy.api.BedWars;
-import com.tomkeuper.bedwars.proxy.api.Language;
-import com.tomkeuper.bedwars.proxy.api.event.PlayerLangChangeEvent;
+import com.astroid.bedwars.proxy.api.BedWars;
+import com.astroid.bedwars.proxy.api.Language;
+import com.astroid.bedwars.proxy.api.event.PlayerLangChangeEvent;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

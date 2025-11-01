@@ -1,10 +1,10 @@
 package com.tomkeuper.bedwars.proxy.command.main;
 
 import com.tomkeuper.bedwars.proxy.arenamanager.ArenaManager;
-import com.tomkeuper.bedwars.proxy.api.ArenaStatus;
-import com.tomkeuper.bedwars.proxy.api.CachedArena;
-import com.tomkeuper.bedwars.proxy.api.command.SubCommand;
-import com.tomkeuper.bedwars.proxy.api.Messages;
+import com.astroid.bedwars.proxy.api.ArenaStatus;
+import com.astroid.bedwars.proxy.api.CachedArena;
+import com.astroid.bedwars.proxy.api.command.SubCommand;
+import com.astroid.bedwars.proxy.api.Messages;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;

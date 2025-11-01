@@ -1,4 +1,4 @@
-package com.tomkeuper.bedwars.proxy.api.party;
+package com.astroid.bedwars.proxy.api.party;
 
 import org.bukkit.entity.Player;
 

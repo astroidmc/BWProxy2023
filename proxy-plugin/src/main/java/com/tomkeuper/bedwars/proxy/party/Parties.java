@@ -2,8 +2,8 @@ package com.tomkeuper.bedwars.proxy.party;
 
 import com.alessiodp.parties.api.interfaces.PartiesAPI;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
-import com.tomkeuper.bedwars.proxy.api.Messages;
-import com.tomkeuper.bedwars.proxy.api.party.Party;
+import com.astroid.bedwars.proxy.api.Messages;
+import com.astroid.bedwars.proxy.api.party.Party;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

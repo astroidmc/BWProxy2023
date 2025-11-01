@@ -1,7 +1,7 @@
 package com.tomkeuper.bedwars.proxy.language;
 
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
-import com.tomkeuper.bedwars.proxy.api.Messages;
+import com.astroid.bedwars.proxy.api.Messages;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.Arrays;

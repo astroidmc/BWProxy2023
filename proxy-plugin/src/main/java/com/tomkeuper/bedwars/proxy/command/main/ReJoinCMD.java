@@ -2,10 +2,10 @@ package com.tomkeuper.bedwars.proxy.command.main;
 
 import com.tomkeuper.bedwars.proxy.language.LanguageManager;
 import com.tomkeuper.bedwars.proxy.rejoin.RemoteReJoin;
-import com.tomkeuper.bedwars.proxy.api.command.SubCommand;
+import com.astroid.bedwars.proxy.api.command.SubCommand;
 import com.tomkeuper.bedwars.proxy.configuration.SoundsConfig;
 import com.tomkeuper.bedwars.proxy.language.Language;
-import com.tomkeuper.bedwars.proxy.api.Messages;
+import com.astroid.bedwars.proxy.api.Messages;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -30,7 +30,7 @@ public class ReJoinCMD extends SubCommand {
             return;
         }
 
-        com.tomkeuper.bedwars.proxy.api.RemoteReJoin rj = RemoteReJoin.getReJoin(p.getUniqueId());
+        com.astroid.bedwars.proxy.api.RemoteReJoin rj = RemoteReJoin.getReJoin(p.getUniqueId());
 
         if (rj == null) {
             p.sendMessage(Language.getMsg(p, Messages.REJOIN_NO_ARENA));

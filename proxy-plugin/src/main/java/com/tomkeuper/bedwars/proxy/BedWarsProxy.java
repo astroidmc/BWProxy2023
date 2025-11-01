@@ -1,11 +1,11 @@
 package com.tomkeuper.bedwars.proxy;
 
 import com.tomkeuper.bedwars.proxy.addon.AddonManager;
-import com.tomkeuper.bedwars.proxy.api.BedWars;
-import com.tomkeuper.bedwars.proxy.api.addon.Addon;
-import com.tomkeuper.bedwars.proxy.api.addon.IAddonManager;
-import com.tomkeuper.bedwars.proxy.api.database.Database;
-import com.tomkeuper.bedwars.proxy.api.party.Party;
+import com.astroid.bedwars.proxy.api.BedWars;
+import com.astroid.bedwars.proxy.api.addon.Addon;
+import com.astroid.bedwars.proxy.api.addon.IAddonManager;
+import com.astroid.bedwars.proxy.api.database.Database;
+import com.astroid.bedwars.proxy.api.party.Party;
 import com.tomkeuper.bedwars.proxy.arenamanager.ArenaSelectorListener;
 import com.tomkeuper.bedwars.proxy.arenasign.SignManager;
 import com.tomkeuper.bedwars.proxy.command.RejoinCommand;
@@ -18,7 +18,7 @@ import com.tomkeuper.bedwars.proxy.connectionmanager.redis.RedisConnection;
 import com.tomkeuper.bedwars.proxy.connectionmanager.redis.RetrieveArenaTask;
 import com.tomkeuper.bedwars.proxy.language.LangListeners;
 import com.tomkeuper.bedwars.proxy.language.LanguageManager;
-import com.tomkeuper.bedwars.proxy.api.level.Level;
+import com.astroid.bedwars.proxy.api.level.Level;
 import com.tomkeuper.bedwars.proxy.levels.internal.InternalLevel;
 import com.tomkeuper.bedwars.proxy.levels.internal.LevelListeners;
 import com.tomkeuper.bedwars.proxy.party.Internal;
@@ -143,7 +143,7 @@ public class BedWarsProxy extends JavaPlugin {
             defaultRankupCost = 1000;
         }
 
-        registerListeners(new LangListeners(), new ArenaSelectorListener(), new CacheListener());
+        registerListeners(new LangListeners(), new ArenaSelectorListener(), new CacheListener(), new com.tomkeuper.bedwars.proxy.utils.FeedbackChatListener(), new com.tomkeuper.bedwars.proxy.utils.JoinQuitListener());
         //noinspection InstantiationOfUtilityClass
         new SoundsConfig();
 

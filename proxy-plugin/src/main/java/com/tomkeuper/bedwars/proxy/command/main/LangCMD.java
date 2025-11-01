@@ -1,9 +1,9 @@
 package com.tomkeuper.bedwars.proxy.command.main;
 
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
-import com.tomkeuper.bedwars.proxy.api.Language;
-import com.tomkeuper.bedwars.proxy.api.command.SubCommand;
-import com.tomkeuper.bedwars.proxy.api.Messages;
+import com.astroid.bedwars.proxy.api.Language;
+import com.astroid.bedwars.proxy.api.command.SubCommand;
+import com.astroid.bedwars.proxy.api.Messages;
 import com.tomkeuper.bedwars.proxy.language.LanguageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

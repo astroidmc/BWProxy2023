@@ -9,7 +9,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Language extends PluginConfig implements com.tomkeuper.bedwars.proxy.api.Language {
+public class Language extends PluginConfig implements com.astroid.bedwars.proxy.api.Language {
 
     private final String iso;
     private String prefix = "";

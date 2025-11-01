@@ -1,4 +1,4 @@
-package com.tomkeuper.bedwars.proxy.api.addon;
+package com.astroid.bedwars.proxy.api.addon;
 
 import org.bukkit.plugin.Plugin;
 

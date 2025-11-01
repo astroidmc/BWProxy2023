@@ -1,9 +1,9 @@
 package com.tomkeuper.bedwars.proxy.command.main;
 
-import com.tomkeuper.bedwars.proxy.api.command.ParentCommand;
+import com.astroid.bedwars.proxy.api.command.ParentCommand;
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
 import com.tomkeuper.bedwars.proxy.language.Language;
-import com.tomkeuper.bedwars.proxy.api.Messages;
+import com.astroid.bedwars.proxy.api.Messages;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;

@@ -1,4 +1,4 @@
-package com.tomkeuper.bedwars.proxy.api.level;
+package com.astroid.bedwars.proxy.api.level;
 
 import org.bukkit.entity.Player;
 

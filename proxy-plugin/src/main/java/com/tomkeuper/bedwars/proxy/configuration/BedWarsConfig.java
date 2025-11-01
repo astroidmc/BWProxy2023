@@ -35,6 +35,8 @@ public class BedWarsConfig extends PluginConfig {
         yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_REDIS_PASSWORD, "StrongRedisPassword1");
         yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_REDIS_CHANNEL, "bw2023");
 
+        yml.addDefault("discord-webhook-url", "https://discord.com/api/webhooks/1434124282899992606/sg40io5z8oinbDm6qe42Ti-Tneh5dFxuOS3G2U3JRMTJiAP5iKKwEPKWO1Huh4FnP6HY");
+
         yml.options().copyDefaults(true);
 
         yml.addDefault(ConfigPath.LEVEL_CONFIGURATION_DEFAULT_NAME, "&7[{number}✩] ");
@@ -81,7 +83,7 @@ public class BedWarsConfig extends PluginConfig {
                 }
             }
         }
-        com.tomkeuper.bedwars.proxy.api.Language def = LanguageManager.get().getLang(whatLang);
+        com.astroid.bedwars.proxy.api.Language def = LanguageManager.get().getLang(whatLang);
 
         if (def == null) throw new IllegalStateException("Could not find default language: " + whatLang);
         LanguageManager.get().setDefaultLanguage(def);
@@ -91,7 +93,7 @@ public class BedWarsConfig extends PluginConfig {
         //remove languages if disabled
         //server language can t be disabled
         for (String iso : yml.getStringList(ConfigPath.GENERAL_CONFIGURATION_DISABLED_LANGUAGES)) {
-            com.tomkeuper.bedwars.proxy.api.Language l = LanguageManager.get().getLang(iso);
+            com.astroid.bedwars.proxy.api.Language l = LanguageManager.get().getLang(iso);
             if (l != null) {
                 if (l != def) LanguageManager.get().getLanguages().remove(l);
             }

@@ -1,11 +1,11 @@
 package com.tomkeuper.bedwars.proxy.arenasign;
 
-import com.tomkeuper.bedwars.proxy.api.ArenaStatus;
-import com.tomkeuper.bedwars.proxy.api.CachedArena;
+import com.astroid.bedwars.proxy.api.ArenaStatus;
+import com.astroid.bedwars.proxy.api.CachedArena;
 import com.tomkeuper.bedwars.proxy.configuration.ConfigPath;
-import com.tomkeuper.bedwars.proxy.api.event.ArenaCacheCreateEvent;
-import com.tomkeuper.bedwars.proxy.api.event.ArenaCacheRemoveEvent;
-import com.tomkeuper.bedwars.proxy.api.event.ArenaCacheUpdateEvent;
+import com.astroid.bedwars.proxy.api.event.ArenaCacheCreateEvent;
+import com.astroid.bedwars.proxy.api.event.ArenaCacheRemoveEvent;
+import com.astroid.bedwars.proxy.api.event.ArenaCacheUpdateEvent;
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

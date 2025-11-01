@@ -1,7 +1,7 @@
 package com.tomkeuper.bedwars.proxy.command.party;
 
-import com.tomkeuper.bedwars.proxy.api.command.SubCommand;
-import com.tomkeuper.bedwars.proxy.api.Messages;
+import com.astroid.bedwars.proxy.api.command.SubCommand;
+import com.astroid.bedwars.proxy.api.Messages;
 import com.google.common.collect.ImmutableList;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;

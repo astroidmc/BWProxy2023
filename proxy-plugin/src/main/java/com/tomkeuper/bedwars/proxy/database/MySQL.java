@@ -1,7 +1,7 @@
 package com.tomkeuper.bedwars.proxy.database;
 
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
-import com.tomkeuper.bedwars.proxy.api.database.Database;
+import com.astroid.bedwars.proxy.api.database.Database;
 import com.tomkeuper.bedwars.proxy.language.LanguageManager;
 import org.bukkit.Bukkit;
 

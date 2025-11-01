@@ -1,6 +1,6 @@
 package com.tomkeuper.bedwars.proxy.database;
 
-import com.tomkeuper.bedwars.proxy.api.database.Database;
+import com.astroid.bedwars.proxy.api.database.Database;
 
 import java.util.UUID;
 

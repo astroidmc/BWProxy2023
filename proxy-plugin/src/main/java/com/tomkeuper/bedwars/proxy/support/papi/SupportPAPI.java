@@ -2,8 +2,8 @@ package com.tomkeuper.bedwars.proxy.support.papi;
 
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
 import com.tomkeuper.bedwars.proxy.arenamanager.ArenaManager;
-import com.tomkeuper.bedwars.proxy.api.CachedArena;
-import com.tomkeuper.bedwars.proxy.api.Messages;
+import com.astroid.bedwars.proxy.api.CachedArena;
+import com.astroid.bedwars.proxy.api.Messages;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

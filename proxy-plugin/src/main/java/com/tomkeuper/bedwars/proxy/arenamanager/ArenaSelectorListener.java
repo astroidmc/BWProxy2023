@@ -1,11 +1,11 @@
 package com.tomkeuper.bedwars.proxy.arenamanager;
 
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
-import com.tomkeuper.bedwars.proxy.api.ArenaStatus;
-import com.tomkeuper.bedwars.proxy.api.CachedArena;
+import com.astroid.bedwars.proxy.api.ArenaStatus;
+import com.astroid.bedwars.proxy.api.CachedArena;
 import com.tomkeuper.bedwars.proxy.configuration.SoundsConfig;
 import com.tomkeuper.bedwars.proxy.language.Language;
-import com.tomkeuper.bedwars.proxy.api.Messages;
+import com.astroid.bedwars.proxy.api.Messages;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -107,6 +107,12 @@ public class ArenaSelectorListener implements Listener {
                 return;
             }
 
+            // Handle feedback
+            if ("feedback".equals(action)) {
+                com.tomkeuper.bedwars.proxy.utils.FeedbackManager.getInstance().promptFeedback(p);
+                return;
+            }
+
             // Handle regular arena click
             String server = meta.getPersistentDataContainer().get(new NamespacedKey(BedWarsProxy.getPlugin(), "server"), PersistentDataType.STRING);
             String identifier = meta.getPersistentDataContainer().get(new NamespacedKey(BedWarsProxy.getPlugin(), "world_identifier"), PersistentDataType.STRING);
@@ -181,13 +187,14 @@ public class ArenaSelectorListener implements Listener {
                 return;
             }
 
+
             // Handle regular arena click - check for grouped map first
             String mapName = meta.getPersistentDataContainer().get(new NamespacedKey(BedWarsProxy.getPlugin(), "map_name"), PersistentDataType.STRING);
             String arenaGroup = meta.getPersistentDataContainer().get(new NamespacedKey(BedWarsProxy.getPlugin(), "group"), PersistentDataType.STRING);
 
             if (mapName != null && arenaGroup != null) {
                 // Find all arena instances with this map name (multiple docker containers)
-                com.tomkeuper.bedwars.proxy.api.Language lang = com.tomkeuper.bedwars.proxy.language.LanguageManager.get().getPlayerLanguage(p);
+                com.astroid.bedwars.proxy.api.Language lang = com.tomkeuper.bedwars.proxy.language.LanguageManager.get().getPlayerLanguage(p);
                 java.util.List<CachedArena> mapInstances = new java.util.ArrayList<>();
 
                 for (CachedArena arena : ArenaManager.getArenas()) {
@@ -284,7 +291,79 @@ public class ArenaSelectorListener implements Listener {
                 p.closeInventory();
             }
         }
+
+        // Handle Rotating Event GUI clicks
+        if (e.getClickedInventory() != null && e.getClickedInventory().getHolder() instanceof RotatingEventGUI.RotatingEventHolder) {
+            e.setCancelled(true);
+            Player p = (Player) e.getWhoClicked();
+            ItemStack i = e.getCurrentItem();
+
+            if (i == null) return;
+            if (i.getType() == Material.AIR) return;
+
+            ItemMeta meta = i.getItemMeta();
+            if (meta == null) return;
+
+            String action = meta.getPersistentDataContainer().get(new NamespacedKey(BedWarsProxy.getPlugin(), "action"), PersistentDataType.STRING);
+
+            // Handle join rotating mode
+            if ("join-rotating".equals(action)) {
+                // Find all arenas in the "rotating" group
+                java.util.List<CachedArena> availableArenas = new java.util.ArrayList<>();
+                for (CachedArena arena : ArenaManager.getArenas()) {
+                    if (arena.getArenaGroup().equalsIgnoreCase("rotating")) {
+                        if (arena.getStatus() == ArenaStatus.WAITING || arena.getStatus() == ArenaStatus.STARTING) {
+                            availableArenas.add(arena);
+                        }
+                    }
+                }
+
+                if (availableArenas.isEmpty()) {
+                    SoundsConfig.playSound("join-denied", p);
+                    p.sendMessage(Language.getMsg(p, Messages.ARENA_JOIN_DENIED_SELECTOR));
+                    p.closeInventory();
+                    return;
+                }
+
+                // Smart matchmaking: find the arena with the most players
+                CachedArena bestArena = null;
+                int maxPlayers = -1;
+
+                for (CachedArena arena : availableArenas) {
+                    int currentPlayers = arena.getCurrentPlayers();
+                    if (currentPlayers > maxPlayers) {
+                        maxPlayers = currentPlayers;
+                        bestArena = arena;
+                    }
+                }
+
+                // Try to join the best arena
+                if (bestArena != null && bestArena.addPlayer(p, null)) {
+                    SoundsConfig.playSound("join-allowed", p);
+                } else {
+                    // If the best arena is full, try others
+                    boolean joined = false;
+                    for (CachedArena arena : availableArenas) {
+                        if (arena != bestArena && arena.addPlayer(p, null)) {
+                            SoundsConfig.playSound("join-allowed", p);
+                            joined = true;
+                            break;
+                        }
+                    }
+
+                    if (!joined) {
+                        SoundsConfig.playSound("join-denied", p);
+                        p.sendMessage(Language.getMsg(p, Messages.ARENA_JOIN_DENIED_SELECTOR));
+                    }
+                }
+                p.closeInventory();
+                return;
+            }
+
+            // Handle close GUI
+            if ("close-gui".equals(action)) {
+                p.closeInventory();
+            }
+        }
     }
-
-
 }

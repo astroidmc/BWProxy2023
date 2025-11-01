@@ -1,10 +1,10 @@
 package com.tomkeuper.bedwars.proxy.connectionmanager.redis;
 
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
-import com.tomkeuper.bedwars.proxy.api.ArenaStatus;
-import com.tomkeuper.bedwars.proxy.api.CachedArena;
-import com.tomkeuper.bedwars.proxy.api.event.ArenaCacheCreateEvent;
-import com.tomkeuper.bedwars.proxy.api.event.ArenaCacheUpdateEvent;
+import com.astroid.bedwars.proxy.api.ArenaStatus;
+import com.astroid.bedwars.proxy.api.CachedArena;
+import com.astroid.bedwars.proxy.api.event.ArenaCacheCreateEvent;
+import com.astroid.bedwars.proxy.api.event.ArenaCacheUpdateEvent;
 import com.tomkeuper.bedwars.proxy.arenamanager.ArenaManager;
 import com.tomkeuper.bedwars.proxy.arenamanager.LegacyArena;
 import org.bukkit.Bukkit;

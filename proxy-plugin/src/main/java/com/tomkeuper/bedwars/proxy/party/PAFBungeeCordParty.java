@@ -1,6 +1,6 @@
 package com.tomkeuper.bedwars.proxy.party;
 
-import com.tomkeuper.bedwars.proxy.api.party.Party;
+import com.astroid.bedwars.proxy.api.party.Party;
 import de.simonsator.partyandfriends.spigot.api.pafplayers.PAFPlayer;
 import de.simonsator.partyandfriends.spigot.api.pafplayers.PAFPlayerManager;
 import de.simonsator.partyandfriends.spigot.api.party.PartyManager;
