@@ -29,6 +29,7 @@ public class MainCommand extends ParentCommand {
         addSubCommand(new JoinCMD("join", ""));
         addSubCommand(new ReJoinCMD("rejoin", "bw.rejoin"));
         addSubCommand(new TpCommand("tp", "bw.tp"));
+        addSubCommand(new DailyEventCMD("dailyevent", "bw.admin"));
     }
 
     @Override

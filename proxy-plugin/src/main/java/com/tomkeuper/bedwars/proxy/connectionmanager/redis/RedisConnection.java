@@ -122,6 +122,21 @@ public class RedisConnection implements IRedisClient {
     }
 
     /**
+     * Store a setting in the Redis database.
+     *
+     * @param redisSettingIdentifier the identifier of the setting to be stored.
+     * @param value the value to be stored.
+     */
+    public void storeSetting(String redisSettingIdentifier, String value){
+        try (Jedis jedis = dataPool.getResource()) {
+            String key = "settings";
+            jedis.hset(key, redisSettingIdentifier, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Publishes a message to a specified channel using Redis.
      *
      * @param message the message to be sent

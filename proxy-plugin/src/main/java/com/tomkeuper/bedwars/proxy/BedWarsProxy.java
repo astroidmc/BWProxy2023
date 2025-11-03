@@ -199,6 +199,12 @@ public class BedWarsProxy extends JavaPlugin {
         // Initialize the addons
         Bukkit.getScheduler().runTaskLater(this, () -> addonManager.loadAddons(), 60L);
 
+        // Initialize Daily Event Manager
+        Bukkit.getScheduler().runTaskLater(this, () -> {
+            com.tomkeuper.bedwars.proxy.arenamanager.DailyEventManager.init();
+            getLogger().info("Daily Event Manager initialized!");
+        }, 70L);
+
         // Send startup message, delayed to make sure everything is loaded and registered.
         Bukkit.getScheduler().runTaskLater(this, () -> {
             this.getLogger().info("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
@@ -232,6 +238,11 @@ public class BedWarsProxy extends JavaPlugin {
      */
     @Override
     public void onDisable() {
+        // Shutdown Daily Event Manager
+        if (com.tomkeuper.bedwars.proxy.arenamanager.DailyEventManager.getInstance() != null) {
+            com.tomkeuper.bedwars.proxy.arenamanager.DailyEventManager.getInstance().shutdown();
+        }
+
         redisConnection.close();
 
         Bukkit.getScheduler().cancelTasks(this);
