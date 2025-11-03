@@ -119,6 +119,36 @@ Implemented a complete daily rotating event system for "The Rift" gamemode. Even
 | `/bw dailyevent info` | `bw.admin` | Show current event details |
 | `/bw dailyevent list` | `bw.admin` | List all available events |
 
+## PlaceholderAPI Placeholders
+
+The following placeholders are available for use in chat, scoreboards, and other plugins:
+
+| Placeholder | Description | Example Output |
+|------------|-------------|----------------|
+| `%bw2023_daily_event_name%` | Name of current event | `Meteorite Storm` |
+| `%bw2023_daily_event_id%` | ID of current event | `METEOR_STORM` |
+| `%bw2023_daily_event_description%` | First line of description | `Meteorites rain from the sky` |
+
+### Usage Examples
+
+**In chat messages:**
+```java
+player.sendMessage("§6Today's Event: §e%bw2023_daily_event_name%");
+```
+
+**In scoreboards:**
+```java
+scoreboard.setLine(5, PlaceholderAPI.setPlaceholders(player, 
+    "&6Event: &e%bw2023_daily_event_name%"));
+```
+
+**In item lore:**
+```yaml
+lore:
+  - "&7Current Event: &e%bw2023_daily_event_name%"
+  - "&7Event ID: &7%bw2023_daily_event_id%"
+```
+
 ## Testing Checklist
 
 - [ ] Server starts without errors

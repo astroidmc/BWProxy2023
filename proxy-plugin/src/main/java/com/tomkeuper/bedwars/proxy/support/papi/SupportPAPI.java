@@ -2,6 +2,7 @@ package com.tomkeuper.bedwars.proxy.support.papi;
 
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
 import com.tomkeuper.bedwars.proxy.arenamanager.ArenaManager;
+import com.tomkeuper.bedwars.proxy.arenamanager.DailyEventManager;
 import com.astroid.bedwars.proxy.api.CachedArena;
 import com.astroid.bedwars.proxy.api.Messages;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -59,6 +60,22 @@ public class SupportPAPI extends PlaceholderExpansion {
         if (p == null) return null;
         if (p.getUniqueId() == null) return null;
         switch (s) {
+            case "daily_event_name":
+                if (DailyEventManager.getInstance() != null && DailyEventManager.getInstance().getCurrentEvent() != null) {
+                    replay = DailyEventManager.getInstance().getCurrentEvent().getName();
+                }
+                break;
+            case "daily_event_id":
+                if (DailyEventManager.getInstance() != null && DailyEventManager.getInstance().getCurrentEvent() != null) {
+                    replay = DailyEventManager.getInstance().getCurrentEvent().getId();
+                }
+                break;
+            case "daily_event_description":
+                if (DailyEventManager.getInstance() != null && DailyEventManager.getInstance().getCurrentEvent() != null) {
+                    String[] desc = DailyEventManager.getInstance().getCurrentEvent().getDescription();
+                    replay = desc.length > 0 ? desc[0] : "";
+                }
+                break;
             case "stats_firstplay":
                 replay = new SimpleDateFormat(getMsg(p, Messages.FORMATTING_STATS_DATE_FORMAT)).format(BedWarsProxy.getStatsCache().getPlayerFirstPlay(p.getUniqueId()));
                 break;

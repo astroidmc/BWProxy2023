@@ -206,6 +206,9 @@ public class DailyEventManager {
 
         // Broadcast to all online players
         broadcastEventChange();
+
+        // Broadcast to all game servers via Redis
+        broadcastEventToGameServers();
     }
 
     /**
@@ -264,6 +267,25 @@ public class DailyEventManager {
                 player.sendMessage("§8§m                                                    ");
             });
         });
+    }
+
+    /**
+     * Broadcast event change to all game servers via Redis.
+     * This allows the arena plugin to update its active event in real-time.
+     */
+    private void broadcastEventToGameServers() {
+        com.google.gson.JsonObject message = new com.google.gson.JsonObject();
+        message.addProperty("type", "EVENT_SYNC");
+        message.addProperty("event_id", currentEvent.getId());
+        message.addProperty("event_name", currentEvent.getName());
+        message.addProperty("timestamp", System.currentTimeMillis());
+
+        // Send via Redis to all game servers
+        BedWarsProxy.getRedisConnection().sendMessage(message, "bedwars-events");
+
+        BedWarsProxy.getPlugin().getLogger().info(
+            "Broadcasted event change to game servers: " + currentEvent.getName() + " (" + currentEvent.getId() + ")"
+        );
     }
 
     /**
