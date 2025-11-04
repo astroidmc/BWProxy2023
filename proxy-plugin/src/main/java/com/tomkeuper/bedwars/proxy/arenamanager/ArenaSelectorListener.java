@@ -360,9 +360,36 @@ public class ArenaSelectorListener implements Listener {
                 return;
             }
 
+            // Handle open event calendar
+            if ("open-event-calendar".equals(action)) {
+                RotatingEventGUI.openEventCalendarGUI(p);
+                return;
+            }
+
             // Handle close GUI
             if ("close-gui".equals(action)) {
                 p.closeInventory();
+            }
+        }
+
+        // Handle Event Calendar GUI clicks
+        if (e.getClickedInventory() != null && e.getClickedInventory().getHolder() instanceof RotatingEventGUI.EventCalendarHolder) {
+            e.setCancelled(true);
+            Player p = (Player) e.getWhoClicked();
+            ItemStack i = e.getCurrentItem();
+
+            if (i == null) return;
+            if (i.getType() == Material.AIR) return;
+
+            ItemMeta meta = i.getItemMeta();
+            if (meta == null) return;
+
+            String action = meta.getPersistentDataContainer().get(new NamespacedKey(BedWarsProxy.getPlugin(), "action"), PersistentDataType.STRING);
+
+            // Handle back to main GUI
+            if ("back-to-main".equals(action)) {
+                RotatingEventGUI.openRotatingEventGUI(p);
+                return;
             }
         }
     }

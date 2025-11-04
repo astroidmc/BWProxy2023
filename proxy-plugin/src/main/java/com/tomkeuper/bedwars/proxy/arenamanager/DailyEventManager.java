@@ -7,7 +7,6 @@ import org.bukkit.scheduler.BukkitTask;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Manages the daily rotating event system for The Rift.
@@ -167,42 +166,60 @@ public class DailyEventManager {
      * Load the current event from Redis or select a new one.
      */
     private void loadCurrentEvent() {
-        String storedEventId = BedWarsProxy.getRedisConnection().retrieveSetting("daily_event_id");
         String storedDate = BedWarsProxy.getRedisConnection().retrieveSetting("daily_event_date");
+        String storedDayIndexStr = BedWarsProxy.getRedisConnection().retrieveSetting("daily_event_day_index");
 
         LocalDate today = LocalDate.now();
         String todayString = today.toString();
 
         // Check if we need to rotate to a new event
-        if (storedDate == null || !storedDate.equals(todayString) || storedEventId == null) {
+        if (storedDate == null || !storedDate.equals(todayString) || storedDayIndexStr == null) {
             // Need to select a new event
             rotateToNewEvent();
         } else {
-            // Load the existing event for today
-            currentEvent = findEventById(storedEventId);
-            if (currentEvent == null) {
-                // Event not found, select a new one
+            // Load the existing event for today using day index
+            try {
+                int dayIndex = Integer.parseInt(storedDayIndexStr);
+                if (dayIndex >= 0 && dayIndex < allEvents.size()) {
+                    currentEvent = allEvents.get(dayIndex);
+                    BedWarsProxy.getPlugin().getLogger().info("Loaded daily event: " + currentEvent.getName() + " for " + todayString + " (Day " + (dayIndex + 1) + "/" + allEvents.size() + ")");
+                } else {
+                    // Invalid index, select a new one
+                    rotateToNewEvent();
+                }
+            } catch (NumberFormatException e) {
+                // Invalid stored index, select a new one
                 rotateToNewEvent();
-            } else {
-                BedWarsProxy.getPlugin().getLogger().info("Loaded daily event: " + currentEvent.getName() + " for " + todayString);
             }
         }
     }
 
     /**
-     * Rotate to a new daily event.
+     * Rotate to a new daily event (sequential rotation).
      */
     private void rotateToNewEvent() {
-        // Select a random event (could be improved to ensure variety)
-        int randomIndex = ThreadLocalRandom.current().nextInt(allEvents.size());
-        currentEvent = allEvents.get(randomIndex);
+        String storedDayIndexStr = BedWarsProxy.getRedisConnection().retrieveSetting("daily_event_day_index");
+        int currentDayIndex = 0;
+
+        // Get the previous day index and increment it
+        if (storedDayIndexStr != null) {
+            try {
+                currentDayIndex = Integer.parseInt(storedDayIndexStr);
+                currentDayIndex = (currentDayIndex + 1) % allEvents.size(); // Move to next event, wrap around
+            } catch (NumberFormatException e) {
+                currentDayIndex = 0; // Start from beginning if invalid
+            }
+        }
+
+        // Select the event based on sequential index
+        currentEvent = allEvents.get(currentDayIndex);
 
         // Store in Redis
         LocalDate today = LocalDate.now();
-        BedWarsProxy.getRedisConnection().storeSetting("daily_event_id", currentEvent.getId());
+        BedWarsProxy.getRedisConnection().storeSetting("daily_event_day_index", String.valueOf(currentDayIndex));
         BedWarsProxy.getRedisConnection().storeSetting("daily_event_date", today.toString());
 
-        BedWarsProxy.getPlugin().getLogger().info("Rotated to new daily event: " + currentEvent.getName() + " for " + today);
+        BedWarsProxy.getPlugin().getLogger().info("Rotated to new daily event: " + currentEvent.getName() + " for " + today + " (Day " + (currentDayIndex + 1) + "/" + allEvents.size() + ")");
 
         // Broadcast to all online players
         broadcastEventChange();
@@ -236,17 +253,6 @@ public class DailyEventManager {
         return duration.getSeconds() * 20; // Convert seconds to ticks (20 ticks per second)
     }
 
-    /**
-     * Find an event by its ID.
-     */
-    private DailyEvent findEventById(String id) {
-        for (DailyEvent event : allEvents) {
-            if (event.getId().equals(id)) {
-                return event;
-            }
-        }
-        return null;
-    }
 
     /**
      * Broadcast the event change to all online players.
@@ -300,6 +306,54 @@ public class DailyEventManager {
      */
     public List<DailyEvent> getAllEvents() {
         return new ArrayList<>(allEvents);
+    }
+
+    /**
+     * Get the number of days until a specific event becomes active.
+     * Returns 0 if the event is currently active.
+     *
+     * @param event The event to check
+     * @return Number of days until the event is active
+     */
+    public int getDaysUntilEvent(DailyEvent event) {
+        int currentDayIndex = getCurrentDayIndex();
+        int eventIndex = allEvents.indexOf(event);
+
+        if (eventIndex == -1) {
+            return -1; // Event not found
+        }
+
+        if (eventIndex == currentDayIndex) {
+            return 0; // Currently active
+        }
+
+        // Calculate days until this event
+        int daysUntil;
+        if (eventIndex > currentDayIndex) {
+            daysUntil = eventIndex - currentDayIndex;
+        } else {
+            // Event is earlier in the list, so it wraps around
+            daysUntil = (allEvents.size() - currentDayIndex) + eventIndex;
+        }
+
+        return daysUntil;
+    }
+
+    /**
+     * Get the current day index in the rotation cycle.
+     *
+     * @return The current day index (0-based)
+     */
+    public int getCurrentDayIndex() {
+        String storedDayIndexStr = BedWarsProxy.getRedisConnection().retrieveSetting("daily_event_day_index");
+        if (storedDayIndexStr != null) {
+            try {
+                return Integer.parseInt(storedDayIndexStr);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        }
+        return 0;
     }
 
     /**

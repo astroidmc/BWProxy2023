@@ -25,39 +25,73 @@ import java.util.List;
  */
 public class RotatingEventGUI {
 
-
     /**
-     * Opens the Rotating Event GUI for the player.
-     * 6 rows total:
-     * - Row 1: Current event display
-     * - Row 2: Join button (beacon in the middle, slot 13)
-     * - Rows 3-5: All available events (7 events)
-     * - Row 6: Close button
+     * Opens the main Rotating Event GUI for the player.
+     * 5 rows total:
+     * - Row 1: Event Calendar (clock in center, slot 4)
+     * - Row 3: Join button (beacon in the middle, slot 22)
+     * - Row 5: Empty
      *
      * @param p The player to show the GUI to
      */
     public static void openRotatingEventGUI(Player p) {
-        int size = 54; // 6 rows
+        int size = 45; // 5 rows
         Inventory inv = Bukkit.createInventory(new RotatingEventHolder(), size,
-            IridiumColorAPI.process("&b&lThe Rift &8- &6&lDaily Events"));
+            IridiumColorAPI.process("&8Daily Events"));
 
         DailyEvent currentEvent = DailyEventManager.getInstance().getCurrentEvent();
-        List<DailyEvent> allEvents = DailyEventManager.getInstance().getAllEvents();
 
-        // Row 1 - Current Event Display (slot 4 - center of row 1)
-        ItemStack currentEventItem = createCurrentEventDisplay(currentEvent);
-        inv.setItem(4, currentEventItem);
+        // Row 1 - Event Calendar (clock in center, slot 4)
+        ItemStack clockItem = new ItemStack(Material.CLOCK, 1);
+        ItemMeta clockMeta = clockItem.getItemMeta();
+        if (clockMeta != null) {
+            clockMeta.setDisplayName(IridiumColorAPI.process("&e&lEvent Calendar"));
+            List<String> clockLore = new ArrayList<>();
+            clockLore.add(IridiumColorAPI.process("&7"));
+            clockLore.add(IridiumColorAPI.process("&7View all available daily events"));
+            clockLore.add(IridiumColorAPI.process("&7and see what's coming next!"));
+            clockLore.add(IridiumColorAPI.process("&7"));
+            clockLore.add(IridiumColorAPI.process("&aClick to open the calendar!"));
+            clockMeta.setLore(clockLore);
+            clockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
-        // Row 2 - Beacon in the middle (slot 13)
+            clockMeta.getPersistentDataContainer().set(
+                new NamespacedKey(BedWarsProxy.getPlugin(), "action"),
+                PersistentDataType.STRING, "open-event-calendar");
+            clockMeta.getPersistentDataContainer().set(
+                new NamespacedKey(BedWarsProxy.getPlugin(), "cancelClick"),
+                PersistentDataType.STRING, "true");
+
+            clockItem.setItemMeta(clockMeta);
+        }
+        inv.setItem(4, clockItem);
+
+        // Row 3 - Beacon in the middle (slot 22 - middle of row 3 in 5-row GUI)
         ItemStack beaconItem = new ItemStack(Material.BEACON, 1);
         ItemMeta beaconMeta = beaconItem.getItemMeta();
         if (beaconMeta != null) {
-            beaconMeta.setDisplayName(IridiumColorAPI.process("&a&lJoin The Rift"));
+            beaconMeta.setDisplayName(IridiumColorAPI.process("&a&lJoin &e&l" + currentEvent.getName()));
             List<String> beaconLore = new ArrayList<>();
             beaconLore.add(IridiumColorAPI.process("&7"));
             beaconLore.add(IridiumColorAPI.process("&e&lToday's Event: &f" + currentEvent.getName()));
-            beaconLore.add(IridiumColorAPI.process("&7Experience the daily rotating event!"));
             beaconLore.add(IridiumColorAPI.process("&7"));
+
+            // Event description
+            for (String line : currentEvent.getDescription()) {
+                beaconLore.add(IridiumColorAPI.process("&7" + line));
+            }
+
+            beaconLore.add(IridiumColorAPI.process("&7"));
+
+            // Event features
+            if (currentEvent.getFeatures().length > 0) {
+                beaconLore.add(IridiumColorAPI.process("&d&lEvent Features:"));
+                for (String feature : currentEvent.getFeatures()) {
+                    beaconLore.add(IridiumColorAPI.process("&7• &d" + feature));
+                }
+                beaconLore.add(IridiumColorAPI.process("&7"));
+            }
+
             beaconLore.add(IridiumColorAPI.process("&aClick to join a match!"));
             beaconMeta.setLore(beaconLore);
             beaconMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -71,10 +105,30 @@ public class RotatingEventGUI {
 
             beaconItem.setItemMeta(beaconMeta);
         }
-        inv.setItem(13, beaconItem);
+        inv.setItem(22, beaconItem);
 
-        // Rows 3-5 - All available events (slots 19-25 for row 3, 28-34 for row 4)
-        int[] eventSlots = {19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
+        p.openInventory(inv);
+        SoundsConfig.playSound("arena-selector-open", p);
+    }
+
+    /**
+     * Opens the Event Calendar GUI showing all available events.
+     * 4 rows total:
+     * - Row 2: All events (slots 10-16, 7 events)
+     * - Row 4: Back arrow (slot 31 - center of last row)
+     *
+     * @param p The player to show the GUI to
+     */
+    public static void openEventCalendarGUI(Player p) {
+        int size = 36; // 4 rows
+        Inventory inv = Bukkit.createInventory(new EventCalendarHolder(), size,
+            IridiumColorAPI.process("&8Event Calendar"));
+
+        DailyEvent currentEvent = DailyEventManager.getInstance().getCurrentEvent();
+        List<DailyEvent> allEvents = DailyEventManager.getInstance().getAllEvents();
+
+        // Row 2 - All events (slots 10-16, starting from 2nd slot to second-to-last slot)
+        int[] eventSlots = {10, 11, 12, 13, 14, 15, 16};
         for (int i = 0; i < allEvents.size() && i < eventSlots.length; i++) {
             DailyEvent event = allEvents.get(i);
             boolean isCurrent = event.getId().equals(currentEvent.getId());
@@ -82,79 +136,30 @@ public class RotatingEventGUI {
             inv.setItem(eventSlots[i], eventItem);
         }
 
-        // Row 6 - Close button (slot 49 - center of last row)
-        ItemStack closeItem = new ItemStack(Material.BARRIER, 1);
-        ItemMeta closeMeta = closeItem.getItemMeta();
-        if (closeMeta != null) {
-            closeMeta.setDisplayName(IridiumColorAPI.process("&c&lClose"));
-            List<String> closeLore = new ArrayList<>();
-            closeLore.add(IridiumColorAPI.process("&7Click to close the GUI"));
-            closeMeta.setLore(closeLore);
+        // Row 4 - Back arrow (slot 31 - center of last row)
+        ItemStack backItem = new ItemStack(Material.ARROW, 1);
+        ItemMeta backMeta = backItem.getItemMeta();
+        if (backMeta != null) {
+            backMeta.setDisplayName(IridiumColorAPI.process("&a&lBack"));
+            List<String> backLore = new ArrayList<>();
+            backLore.add(IridiumColorAPI.process("&7Return to the main menu"));
+            backMeta.setLore(backLore);
 
-            closeMeta.getPersistentDataContainer().set(
+            backMeta.getPersistentDataContainer().set(
                 new NamespacedKey(BedWarsProxy.getPlugin(), "action"),
-                PersistentDataType.STRING, "close-gui");
-            closeMeta.getPersistentDataContainer().set(
+                PersistentDataType.STRING, "back-to-main");
+            backMeta.getPersistentDataContainer().set(
                 new NamespacedKey(BedWarsProxy.getPlugin(), "cancelClick"),
                 PersistentDataType.STRING, "true");
 
-            closeItem.setItemMeta(closeMeta);
+            backItem.setItemMeta(backMeta);
         }
-        inv.setItem(49, closeItem);
+        inv.setItem(31, backItem);
 
         p.openInventory(inv);
         SoundsConfig.playSound("arena-selector-open", p);
     }
 
-    /**
-     * Creates the current event display item (large showcase).
-     *
-     * @param event The current daily event
-     * @return The ItemStack representing the current event
-     */
-    private static ItemStack createCurrentEventDisplay(DailyEvent event) {
-        ItemStack item = new ItemStack(Material.NETHER_STAR, 1);
-        ItemMeta meta = item.getItemMeta();
-
-        if (meta != null) {
-            meta.setDisplayName(IridiumColorAPI.process("&6&l⚡ TODAY'S EVENT ⚡"));
-
-            List<String> lore = new ArrayList<>();
-            lore.add(IridiumColorAPI.process("&7"));
-            lore.add(IridiumColorAPI.process("&e&l" + event.getName()));
-            lore.add(IridiumColorAPI.process("&7"));
-
-            // Event description
-            for (String line : event.getDescription()) {
-                lore.add(IridiumColorAPI.process("&7" + line));
-            }
-
-            lore.add(IridiumColorAPI.process("&7"));
-            lore.add(IridiumColorAPI.process("&a&l✦ ACTIVE ALL DAY"));
-            lore.add(IridiumColorAPI.process("&7This event is active for the entire day!"));
-            lore.add(IridiumColorAPI.process("&7New event at midnight."));
-            lore.add(IridiumColorAPI.process("&7"));
-
-            // Event features/modifiers
-            if (event.getFeatures().length > 0) {
-                lore.add(IridiumColorAPI.process("&d&lEvent Features:"));
-                for (String feature : event.getFeatures()) {
-                    lore.add(IridiumColorAPI.process("&7• &d" + feature));
-                }
-            }
-
-            meta.setLore(lore);
-            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-
-            meta.getPersistentDataContainer().set(
-                new NamespacedKey(BedWarsProxy.getPlugin(), "cancelClick"),
-                PersistentDataType.STRING, "true");
-
-            item.setItemMeta(meta);
-        }
-
-        return item;
-    }
 
     /**
      * Creates an item for a daily event in the event list.
@@ -169,10 +174,16 @@ public class RotatingEventGUI {
         ItemMeta meta = item.getItemMeta();
 
         if (meta != null) {
+            // Calculate days until this event
+            int daysUntil = DailyEventManager.getInstance().getDaysUntilEvent(event);
+
             // Title with different color for current/other
-            String title = isCurrent
-                ? IridiumColorAPI.process("&a&l● &e" + event.getName() + " &a&l(ACTIVE)")
-                : IridiumColorAPI.process("&7&l● &f" + event.getName());
+            String title;
+            if (isCurrent) {
+                title = IridiumColorAPI.process("&a&l● &e" + event.getName() + " &a&l(ACTIVE NOW)");
+            } else {
+                title = IridiumColorAPI.process("&7&l● &f" + event.getName());
+            }
 
             meta.setDisplayName(title);
 
@@ -186,12 +197,18 @@ public class RotatingEventGUI {
 
             lore.add(IridiumColorAPI.process("&7"));
 
-            // Status information
+            // Status information with days until active
             if (isCurrent) {
                 lore.add(IridiumColorAPI.process("&a&l▶ ACTIVE NOW"));
                 lore.add(IridiumColorAPI.process("&7This is today's event!"));
             } else {
-                lore.add(IridiumColorAPI.process("&e⏰ &6Coming Soon"));
+                String daysText;
+                if (daysUntil == 1) {
+                    daysText = "&e⏰ &6Active in 1 day";
+                } else {
+                    daysText = "&e⏰ &6Active in " + daysUntil + " days";
+                }
+                lore.add(IridiumColorAPI.process(daysText));
                 lore.add(IridiumColorAPI.process("&7This event will be active"));
                 lore.add(IridiumColorAPI.process("&7on a future day."));
             }
@@ -223,6 +240,17 @@ public class RotatingEventGUI {
      * Holder class for the Rotating Event GUI inventory.
      */
     public static class RotatingEventHolder implements InventoryHolder {
+        @Nullable
+        @Override
+        public Inventory getInventory() {
+            return null;
+        }
+    }
+
+    /**
+     * Holder class for the Event Calendar GUI inventory.
+     */
+    public static class EventCalendarHolder implements InventoryHolder {
         @Nullable
         @Override
         public Inventory getInventory() {

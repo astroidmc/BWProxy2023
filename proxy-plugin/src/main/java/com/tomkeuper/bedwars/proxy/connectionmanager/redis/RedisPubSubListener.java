@@ -95,7 +95,12 @@ public class RedisPubSubListener extends JedisPubSub {
                         // Assuming addon_data is a string representation of a JSON object
                         String addonDataString = addonDataElement.getAsString();
                         JsonObject addonDataObject = new JsonParser().parse(addonDataString).getAsJsonObject();
-                        Bukkit.getPluginManager().callEvent(new RedisMessageEvent(addonDataObject, json.get("addon_name").getAsString()));
+                        String addonName = json.get("addon_name").getAsString();
+
+                        // Call event on main thread to avoid "may only be triggered synchronously" error
+                        Bukkit.getScheduler().runTask(BedWarsProxy.getPlugin(), () -> {
+                            Bukkit.getPluginManager().callEvent(new RedisMessageEvent(addonDataObject, addonName));
+                        });
                     } else {
                         // Handle other types if necessary
                         BedWarsProxy.debug("Unexpected type for 'addon_data': " + addonDataElement.getClass().getSimpleName());
