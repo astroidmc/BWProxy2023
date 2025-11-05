@@ -182,6 +182,10 @@ public class DailyEventManager {
                 int dayIndex = Integer.parseInt(storedDayIndexStr);
                 if (dayIndex >= 0 && dayIndex < allEvents.size()) {
                     currentEvent = allEvents.get(dayIndex);
+
+                    // Ensure daily_event_id is stored in Redis (might be missing after restart)
+                    BedWarsProxy.getRedisConnection().storeSetting("daily_event_id", currentEvent.getId());
+
                     BedWarsProxy.getPlugin().getLogger().info("Loaded daily event: " + currentEvent.getName() + " for " + todayString + " (Day " + (dayIndex + 1) + "/" + allEvents.size() + ")");
                 } else {
                     // Invalid index, select a new one
@@ -218,6 +222,7 @@ public class DailyEventManager {
         LocalDate today = LocalDate.now();
         BedWarsProxy.getRedisConnection().storeSetting("daily_event_day_index", String.valueOf(currentDayIndex));
         BedWarsProxy.getRedisConnection().storeSetting("daily_event_date", today.toString());
+        BedWarsProxy.getRedisConnection().storeSetting("daily_event_id", currentEvent.getId());
 
         BedWarsProxy.getPlugin().getLogger().info("Rotated to new daily event: " + currentEvent.getName() + " for " + today + " (Day " + (currentDayIndex + 1) + "/" + allEvents.size() + ")");
 
@@ -286,8 +291,8 @@ public class DailyEventManager {
         message.addProperty("event_name", currentEvent.getName());
         message.addProperty("timestamp", System.currentTimeMillis());
 
-        // Send via Redis to all game servers
-        BedWarsProxy.getRedisConnection().sendMessage(message, "bedwars-events");
+        // Send via Redis on the main channel (not a separate channel)
+        BedWarsProxy.getRedisConnection().sendMessage(message.toString());
 
         BedWarsProxy.getPlugin().getLogger().info(
             "Broadcasted event change to game servers: " + currentEvent.getName() + " (" + currentEvent.getId() + ")"

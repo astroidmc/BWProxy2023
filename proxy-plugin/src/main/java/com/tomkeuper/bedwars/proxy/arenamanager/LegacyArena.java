@@ -187,6 +187,7 @@ public class LegacyArena implements CachedArena {
         json.addProperty("lang_iso", LanguageManager.get().getPlayerLanguage(player).getIso());
         json.addProperty("target", targetPlayer == null ? "" : targetPlayer);
         json.addProperty("arena_identifier", getRemoteIdentifier());
+        BedWarsProxy.debug("[Proxy] Sending PLD for " + player.getName() + " -> " + getRemoteIdentifier() + " on server " + getServer());
         BedWarsProxy.getRedisConnection().sendMessage(json.toString());
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
@@ -245,6 +246,7 @@ public class LegacyArena implements CachedArena {
         json.addProperty("uuid", player.getUniqueId().toString());
         json.addProperty("lang_iso", LanguageManager.get().getPlayerLanguage(player).getIso());
         json.addProperty("target", partyOwnerName == null ? "" : partyOwnerName);
+        BedWarsProxy.debug("[Proxy] Sending PLD for " + player.getName() + " -> " + getRemoteIdentifier() + " on server " + getServer());
         json.addProperty("arena_identifier", getRemoteIdentifier());
         BedWarsProxy.getRedisConnection().sendMessage(json.toString());
 
@@ -276,6 +278,7 @@ public class LegacyArena implements CachedArena {
         json.addProperty("type", "PLD");
         json.addProperty("uuid", player.getUniqueId().toString());
         json.addProperty("lang_iso", BedWarsProxy.getAPI().getLanguageUtil().getPlayerLanguage(player).getIso());
+        BedWarsProxy.debug("[Proxy] Sending PLD (rejoin) for " + player.getName() + " -> " + getRemoteIdentifier() + " on server " + getServer());
         json.addProperty("target", "");
         json.addProperty("arena_identifier", getRemoteIdentifier());
         BedWarsProxy.getRedisConnection().sendMessage(json.toString());
